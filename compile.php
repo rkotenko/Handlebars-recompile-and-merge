@@ -3,27 +3,20 @@
 <?php
    // Small script that compiles all the handle templates into .template files
  
-   $d = dir('templates');
+   $d = dir('templates');  // change to whatever directory suits you
    $dir = $d->path . '/';
+   $files = '';
 
     while(false !== ($entry = $d->read()))
     {
         if(strpos($entry, '.handlebars') !== false)
-	{    
+        {    
             $name = explode('.', $entry);
-	    $command = 'handlebars ' . $dir . $entry . ' -f ' . $dir . $name[0] . '.template';
-	    echo $command . "\n";
-	    exec($command);
-   	}
-    }
-
-    $d->rewind();
-    while(false !== ($entry = $d->read()))
-    {
-        if(strpos($entry, '.template') !== false)
-        {
-	       file_put_contents($dir . 'master_template.js', file_get_contents($dir . $entry), FILE_APPEND);
-           unlink($dir . $entry);
+            $files .= $dir . $name[0] . '.' . $name[1] . ' ';
         }
     }
+
+    $command = 'handlebars ' . $files . ' -f ' . $dir . 'master_template.js';
+    echo $command . "\n";
+    exec($command);
 ?>
